@@ -1,66 +1,40 @@
-require("@nomicfoundation/hardhat-toolbox");
-require('dotenv').config();
+// require('@nomiclabs/hardhat-ethers');
+// require('@nomiclabs/hardhat-etherscan');
 require("@nomicfoundation/hardhat-verify");
-require('@openzeppelin/hardhat-upgrades');
-require("@nomicfoundation/hardhat-chai-matchers");
+require("@openzeppelin/hardhat-upgrades");
 
-const { RPC_URL, AMOY_PRIVATE_KEY, AMOY_API_KEY, ETHERSCAN_API_KEY, PRIVATE_KEY } = process.env;
+require('dotenv').config();
 
+const{_RPC_URL_,BSC_RPC_URL_,PRIVATE_KEY,_ETHERSCAN_API_KEY,BSCTESTNET_API_KEY} = process.env;
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.28",
-  defaultNetwork: "amoy",
+  solidity: "0.8.27",
   settings: {
     optimizer: {
+      viaIR: true,
       enabled: true,
-      runs: 200,
+      runs: 200, 
     },
   },
-  networks: {
-    amoy: {
-      url: RPC_URL,
-      accounts: [`0x${AMOY_PRIVATE_KEY}`],
-      gas: "auto",
-      gasPrice: "auto",
-    },
-    holesky: {
-      url: "https://1rpc.io/holesky",
-      accounts: [`0x${AMOY_PRIVATE_KEY}`]
-    },
-    hardhat: {
-      chainId: 1337,
-      allowUnlimitedContractSize: true,
-      throwOnCallFailures: true,
-      throwOnTransactionFailures: true,
-      loggingEnabled: true,
-    },
-    bsctestnet: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-      chainId: 97,
+  debug: {
+    revertStrings: "strip", // Disables revert strings
+  },
+  networks:{
+    bscTestnet: {
+      url: BSC_RPC_URL_,
       accounts: [`0x${PRIVATE_KEY}`]
-    },
+      // timeout: 1200000,
+      // pollingInterval: 10000,
+      // gasPrice: 5000000000
+    }
   },
-  etherscan: {
-    apiKey:{
-      amoy: AMOY_API_KEY,
-      holesky: ETHERSCAN_API_KEY,
-      bscTestnet: "WESQI593MHJE6UQ9GITJNARFMYAXFJ4CCK"
-    },
-    customChains: [
-      {
-        network: "amoy",
-        chainId: 80002,
-        urls: {
-          apiURL: "https://api-amoy.polygonscan.com/api",
-          browserURL: "https://amoy.polygonscan.com/"
-        }
-      }
-    ]
+  sourcify:{
+    enabled: true,
   },
-
-  sourcify: {
-    // Disabled by default
-    // Doesn't need an API key
-    enabled: true
-  }
+  etherscan:{
+    apiKey: {
+      bscTestnet: BSCTESTNET_API_KEY,
+    },
+    
+  },
 };
